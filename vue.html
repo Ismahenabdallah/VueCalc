@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section id="el">
+        <table border="">
+          <tr>
+               <td class="result" colspan="4" >
+                   {{current  || '0'}}
+               </td>
+            </tr>
+            <tr>
+                <td @click="clear" :disabled="!current">C</td>
+                <td @click="percent">%</td>
+                <td >D </td>
+                <td class="r" @click="divide" >÷</td>
+            </tr>
+            <tr>
+                <td @click="append('7')">7</td>
+                <td @click="append('8')">8</td>
+                <td @click="append('9')">9</td>
+                <td  class="r" @click="times"  >*</td>
+            </tr>
+            <tr>
+                <td @click="append('4')">4</td>
+                <td @click="append('5')">5</td>
+                <td @click="append('6')">6</td>
+                <td class="r" @click="minus"   >-</td>
+            </tr>
+            <tr>
+                <td @click="append('1')">1</td>
+                <td @click="append('2')">2</td>
+                <td @click="append('3')">3</td>
+                <td class="r" @click="add">+</td>
+            </tr>
+            <tr>
+                <td colspan="2">0</td>
+                <td @click="dot" >.</td>
+                <td class="r" @click="equal" >=</td>
+            </tr>
+
+        </table>
+    </section>
+</body>
+<script src="vue.js"></script>
+<script>
+    new Vue ({
+        el:"#el",
+        data: {
+            previous: null,
+            clicked:false ,
+            operator:null , 
+            current: '',
+           
+        },
+
+        methods: {
+    clear() {
+      this.current = '';
+    },
+    sign() {
+      this.current = this.current.charAt(0) === '-' ? 
+        this.current.slice(1) : `-${this.current}`;
+    },
+    percent() {
+      this.current = `${parseFloat(this.current) / 100}`;
+    },
+    append(number) {
+      if (this.Clicked) {
+        this.current = '';
+        this.Clicked = false;
+      }
+    //  this.current = `${this.current}${number}`;
+    this.current=number;
+    },
+    dot() {
+      if (this.current.indexOf('.') === -1) {
+        this.append('.');
+      }
+    },
+    setPrevious() {
+      this.previous = this.current;
+      this.Clicked = true;
+    },
+    divide() {
+      this.operator = (a,b) =>  a / b;
+      this.setPrevious();
+    },
+    times() {
+      this.operator = (a, b) => a * b;
+      this.setPrevious();
+    },
+    minus() {
+      this.operator = (a, b) => a - b;
+      this.setPrevious();
+    },
+    add() {
+      this.operator = (a, b) => a + b;
+      this.setPrevious();
+    },
+    equal() {
+      this.current = `${this.operator(
+        parseFloat(this.current), 
+        parseFloat(this.previous)
+      )}`;
+      this.previous = null;
+    }
+  }
+
+    })
+    
+</script>
+</html>
